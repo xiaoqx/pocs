@@ -2,8 +2,10 @@
 pocs of tested targets
 
 ### 001-jasper-aborted-1
+```
 jasper -f $FILE -t jpc -F /tmp/out.pnm -T pnm
 Aborted
+```
 
 
 ### 002-jasper-aborted-2
