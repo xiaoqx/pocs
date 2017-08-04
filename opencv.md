@@ -540,4 +540,19 @@ Segmentation fault
 
 ```
 
+# 9. Invalid write in icvCvt_BGRA2BGR_8u_C4C3R
+
+![](./pics/bug8.PNG)
+
+
+# 10. DOS (CPU exhaust )
+
+the bug results cpu exhaust for a long time.
+
+# 11. DOS (memory exhaust)
+
+This bug results to memory exhaust. 
+
+![](./pics/dos.PNG)
+
 
