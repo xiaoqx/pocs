@@ -185,7 +185,7 @@ Segmentation fault
 
 ```
 
-4. buffer overflow  in cv::BmpDecoder::readData (memcpy)
+# 4. buffer overflow  in cv::BmpDecoder::readData (memcpy)
 
 ```
 Stopped reason: SIGSEGV
