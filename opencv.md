@@ -542,6 +542,83 @@ Segmentation fault
 
 # 9. Invalid write in icvCvt_BGRA2BGR_8u_C4C3R
 
+```
+==2971== Memcheck, a memory error detector
+==2971== Copyright (C) 2002-2013, and GNU GPL'd, by Julian Seward et al.
+==2971== Using Valgrind-3.10.1 and LibVEX; rerun with -h for copyright info
+==2971== Command: ../../../../OpenCV3-Intro-Book-Src/Linux-OpenCV3-examples/GaussianBlur-test/opencv_test.elf id:000038,sig:06,src:000475,op:flip1,pos:21
+==2971== 
+==2971== Warning: set address range perms: large range [0x3a044040, 0x1ba074088) (undefined)
+==2971== Invalid read of size 1
+==2971==    at 0x506A270: icvCvt_BGRA2BGR_8u_C4C3R(unsigned char const*, int, unsigned char*, int, CvSize, int) (in /data/xqx/tests/opencv-test/build/install/lib/libopencv_imgcodecs.so.3.3.0)
+==2971==    by 0x507D7A8: cv::BmpDecoder::readData(cv::Mat&) (in /data/xqx/tests/opencv-test/build/install/lib/libopencv_imgcodecs.so.3.3.0)
+==2971==    by 0x5062D67: cv::imread_(cv::String const&, int, int, cv::Mat*) (in /data/xqx/tests/opencv-test/build/install/lib/libopencv_imgcodecs.so.3.3.0)
+==2971==    by 0x5063204: cv::imread(cv::String const&, int) (in /data/xqx/tests/opencv-test/build/install/lib/libopencv_imgcodecs.so.3.3.0)
+==2971==    by 0x400DFA: main (in /data/xqx/tests/opencv-test/OpenCV3-Intro-Book-Src/Linux-OpenCV3-examples/GaussianBlur-test/opencv_test.elf)
+==2971==  Address 0xdf05b91 is 1 bytes after a block of size 16,416 alloc'd
+==2971==    at 0x4C2B800: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2971==    by 0x507DD8C: cv::BmpDecoder::readData(cv::Mat&) (in /data/xqx/tests/opencv-test/build/install/lib/libopencv_imgcodecs.so.3.3.0)
+==2971==    by 0x5062D67: cv::imread_(cv::String const&, int, int, cv::Mat*) (in /data/xqx/tests/opencv-test/build/install/lib/libopencv_imgcodecs.so.3.3.0)
+==2971==    by 0x5063204: cv::imread(cv::String const&, int) (in /data/xqx/tests/opencv-test/build/install/lib/libopencv_imgcodecs.so.3.3.0)
+==2971==    by 0x400DFA: main (in /data/xqx/tests/opencv-test/OpenCV3-Intro-Book-Src/Linux-OpenCV3-examples/GaussianBlur-test/opencv_test.elf)
+==2971== 
+==2971== Invalid read of size 1
+==2971==    at 0x506A276: icvCvt_BGRA2BGR_8u_C4C3R(unsigned char const*, int, unsigned char*, int, CvSize, int) (in /data/xqx/tests/opencv-test/build/install/lib/libopencv_imgcodecs.so.3.3.0)
+==2971==    by 0x507D7A8: cv::BmpDecoder::readData(cv::Mat&) (in /data/xqx/tests/opencv-test/build/install/lib/libopencv_imgcodecs.so.3.3.0)
+==2971==    by 0x5062D67: cv::imread_(cv::String const&, int, int, cv::Mat*) (in /data/xqx/tests/opencv-test/build/install/lib/libopencv_imgcodecs.so.3.3.0)
+==2971==    by 0x5063204: cv::imread(cv::String const&, int) (in /data/xqx/tests/opencv-test/build/install/lib/libopencv_imgcodecs.so.3.3.0)
+==2971==    by 0x400DFA: main (in /data/xqx/tests/opencv-test/OpenCV3-Intro-Book-Src/Linux-OpenCV3-examples/GaussianBlur-test/opencv_test.elf)
+==2971==  Address 0xdf05b90 is 0 bytes after a block of size 16,416 alloc'd
+==2971==    at 0x4C2B800: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2971==    by 0x507DD8C: cv::BmpDecoder::readData(cv::Mat&) (in /data/xqx/tests/opencv-test/build/install/lib/libopencv_imgcodecs.so.3.3.0)
+==2971==    by 0x5062D67: cv::imread_(cv::String const&, int, int, cv::Mat*) (in /data/xqx/tests/opencv-test/build/install/lib/libopencv_imgcodecs.so.3.3.0)
+==2971==    by 0x5063204: cv::imread(cv::String const&, int) (in /data/xqx/tests/opencv-test/build/install/lib/libopencv_imgcodecs.so.3.3.0)
+==2971==    by 0x400DFA: main (in /data/xqx/tests/opencv-test/OpenCV3-Intro-Book-Src/Linux-OpenCV3-examples/GaussianBlur-test/opencv_test.elf)
+==2971== 
+==2971== Invalid read of size 1
+==2971==    at 0x506A290: icvCvt_BGRA2BGR_8u_C4C3R(unsigned char const*, int, unsigned char*, int, CvSize, int) (in /data/xqx/tests/opencv-test/build/install/lib/libopencv_imgcodecs.so.3.3.0)
+==2971==    by 0x507D7A8: cv::BmpDecoder::readData(cv::Mat&) (in /data/xqx/tests/opencv-test/build/install/lib/libopencv_imgcodecs.so.3.3.0)
+==2971==    by 0x5062D67: cv::imread_(cv::String const&, int, int, cv::Mat*) (in /data/xqx/tests/opencv-test/build/install/lib/libopencv_imgcodecs.so.3.3.0)
+==2971==    by 0x5063204: cv::imread(cv::String const&, int) (in /data/xqx/tests/opencv-test/build/install/lib/libopencv_imgcodecs.so.3.3.0)
+==2971==    by 0x400DFA: main (in /data/xqx/tests/opencv-test/OpenCV3-Intro-Book-Src/Linux-OpenCV3-examples/GaussianBlur-test/opencv_test.elf)
+==2971==  Address 0xdf05b92 is 2 bytes after a block of size 16,416 alloc'd
+==2971==    at 0x4C2B800: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2971==    by 0x507DD8C: cv::BmpDecoder::readData(cv::Mat&) (in /data/xqx/tests/opencv-test/build/install/lib/libopencv_imgcodecs.so.3.3.0)
+==2971==    by 0x5062D67: cv::imread_(cv::String const&, int, int, cv::Mat*) (in /data/xqx/tests/opencv-test/build/install/lib/libopencv_imgcodecs.so.3.3.0)
+==2971==    by 0x5063204: cv::imread(cv::String const&, int) (in /data/xqx/tests/opencv-test/build/install/lib/libopencv_imgcodecs.so.3.3.0)
+==2971==    by 0x400DFA: main (in /data/xqx/tests/opencv-test/OpenCV3-Intro-Book-Src/Linux-OpenCV3-examples/GaussianBlur-test/opencv_test.elf)
+==2971== 
+==2971== 
+==2971== Process terminating with default action of signal 11 (SIGSEGV)
+==2971==  Access not within mapped region at address 0xE2E0001
+==2971==    at 0x506A270: icvCvt_BGRA2BGR_8u_C4C3R(unsigned char const*, int, unsigned char*, int, CvSize, int) (in /data/xqx/tests/opencv-test/build/install/lib/libopencv_imgcodecs.so.3.3.0)
+==2971==    by 0x507D7A8: cv::BmpDecoder::readData(cv::Mat&) (in /data/xqx/tests/opencv-test/build/install/lib/libopencv_imgcodecs.so.3.3.0)
+==2971==    by 0x5062D67: cv::imread_(cv::String const&, int, int, cv::Mat*) (in /data/xqx/tests/opencv-test/build/install/lib/libopencv_imgcodecs.so.3.3.0)
+==2971==    by 0x5063204: cv::imread(cv::String const&, int) (in /data/xqx/tests/opencv-test/build/install/lib/libopencv_imgcodecs.so.3.3.0)
+==2971==    by 0x400DFA: main (in /data/xqx/tests/opencv-test/OpenCV3-Intro-Book-Src/Linux-OpenCV3-examples/GaussianBlur-test/opencv_test.elf)
+==2971==  If you believe this happened as a result of a stack
+==2971==  overflow in your program's main thread (unlikely but
+==2971==  possible), you can try to increase the size of the
+==2971==  main thread stack using the --main-stacksize= flag.
+==2971==  The main thread stack size used in this run was 8388608.
+==2971== 
+==2971== HEAP SUMMARY:
+==2971==     in use at exit: 6,442,761,614 bytes in 397 blocks
+==2971==   total heap usage: 458 allocs, 61 frees, 6,442,771,622 bytes allocated
+==2971== 
+==2971== LEAK SUMMARY:
+==2971==    definitely lost: 0 bytes in 0 blocks
+==2971==    indirectly lost: 0 bytes in 0 blocks
+==2971==      possibly lost: 6,442,655,739 bytes in 114 blocks
+==2971==    still reachable: 105,875 bytes in 283 blocks
+==2971==         suppressed: 0 bytes in 0 blocks
+==2971== Rerun with --leak-check=full to see details of leaked memory
+==2971== 
+==2971== For counts of detected and suppressed errors, rerun with: -v
+==2971== ERROR SUMMARY: 3029845 errors from 3 contexts (suppressed: 0 from 0)
+Segmentation fault
+
+```
 ![](./pics/bug8.PNG)
 
 
