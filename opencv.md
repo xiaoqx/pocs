@@ -639,7 +639,7 @@ This bug results to memory exhaust.
 ==16048== Memcheck, a memory error detector
 ==16048== Copyright (C) 2002-2013, and GNU GPL'd, by Julian Seward et al.
 ==16048== Using Valgrind-3.10.1 and LibVEX; rerun with -h for copyright info
-==16048== Command: ./opencv_test.elf ./GaussianBlur-test/out/crashes/id:000040,sig:06,src:000632,op:ext_AO,pos:24
+==16048== Command: ./opencv_test.elf ./12-opencv-outbound-write-FillColorRow1
 ==16048==
 ==16048== Warning: set address range perms: large range [0x3a044080, 0xccce9780) (undefined)
 ==16048== Invalid write of size 4
