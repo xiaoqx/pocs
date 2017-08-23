@@ -633,3 +633,52 @@ This bug results to memory exhaust.
 ![](./pics/dos.PNG)
 
 
+# 12. out-of-bound write in FillColorRow1
+
+```
+==16048== Memcheck, a memory error detector
+==16048== Copyright (C) 2002-2013, and GNU GPL'd, by Julian Seward et al.
+==16048== Using Valgrind-3.10.1 and LibVEX; rerun with -h for copyright info
+==16048== Command: ./opencv_test.elf ./GaussianBlur-test/out/crashes/id:000040,sig:06,src:000632,op:ext_AO,pos:24
+==16048==
+==16048== Warning: set address range perms: large range [0x3a044080, 0xccce9780) (undefined)
+==16048== Invalid write of size 4
+==16048==    at 0x50AD680: FillColorRow1(unsigned char*, unsigned char*, int, PaletteEntry*) (in /data/xqx/tests/opencv-test/build-20170822/install/lib/libopencv_imgcodecs.so.3.3.0)
+==16048==    by 0x50BCB10: cv::BmpDecoder::readData(cv::Mat&) (in /data/xqx/tests/opencv-test/build-20170822/install/lib/libopencv_imgcodecs.so.3.3.0)
+==16048==    by 0x50A384C: cv::imread_(cv::String const&, int, int, cv::Mat*) (in /data/xqx/tests/opencv-test/build-20170822/install/lib/libopencv_imgcodecs.so.3.3.0)
+==16048==    by 0x50A3DB4: cv::imread(cv::String const&, int) (in /data/xqx/tests/opencv-test/build-20170822/install/lib/libopencv_imgcodecs.so.3.3.0)
+==16048==    by 0x400DFA: main (in /data/xqx/tests/opencv-test/OpenCV3-Intro-Book-Src/Linux-OpenCV3-examples/GaussianBlur-test/opencv_test.elf)
+==16048==  Address 0xffffffffccce04c8 is not stack'd, malloc'd or (recently) free'd
+==16048==
+==16048==
+==16048== Process terminating with default action of signal 11 (SIGSEGV)
+==16048==  Access not within mapped region at address 0xFFFFFFFFCCCE04C8
+==16048==    at 0x50AD680: FillColorRow1(unsigned char*, unsigned char*, int, PaletteEntry*) (in /data/xqx/tests/opencv-test/build-20170822/install/lib/libopencv_imgcodecs.so.3.3.0)
+==16048==    by 0x50BCB10: cv::BmpDecoder::readData(cv::Mat&) (in /data/xqx/tests/opencv-test/build-20170822/install/lib/libopencv_imgcodecs.so.3.3.0)
+==16048==    by 0x50A384C: cv::imread_(cv::String const&, int, int, cv::Mat*) (in /data/xqx/tests/opencv-test/build-20170822/install/lib/libopencv_imgcodecs.so.3.3.0)
+==16048==    by 0x50A3DB4: cv::imread(cv::String const&, int) (in /data/xqx/tests/opencv-test/build-20170822/install/lib/libopencv_imgcodecs.so.3.3.0)
+==16048==    by 0x400DFA: main (in /data/xqx/tests/opencv-test/OpenCV3-Intro-Book-Src/Linux-OpenCV3-examples/GaussianBlur-test/opencv_test.elf)
+==16048==  If you believe this happened as a result of a stack
+==16048==  overflow in your program's main thread (unlikely but
+==16048==  possible), you can try to increase the size of the
+==16048==  main thread stack using the --main-stacksize= flag.
+==16048==  The main thread stack size used in this run was 8388608.
+==16048==
+==16048== HEAP SUMMARY:
+==16048==     in use at exit: 2,462,831,174 bytes in 397 blocks
+==16048==   total heap usage: 458 allocs, 61 frees, 2,462,840,750 bytes allocated
+==16048==
+==16048== LEAK SUMMARY:
+==16048==    definitely lost: 0 bytes in 0 blocks
+==16048==    indirectly lost: 0 bytes in 0 blocks
+==16048==      possibly lost: 5,324 bytes in 105 blocks
+==16048==    still reachable: 2,462,825,850 bytes in 292 blocks
+==16048==         suppressed: 0 bytes in 0 blocks
+==16048== Rerun with --leak-check=full to see details of leaked memory
+==16048==
+==16048== For counts of detected and suppressed errors, rerun with: -v
+==16048== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+Segmentation fault
+
+
+```
