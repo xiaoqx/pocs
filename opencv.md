@@ -682,3 +682,12 @@ Segmentation fault
 
 
 ```
+
+# 13. DOS, exhaust CPU for 10 hours.
+
+a new DOS testcase in opencv after a patch in 20170823,
+it could exhaust cpu for more than 10 hours.
+
+
+
+![](./pics/dos-10h.PNG)
