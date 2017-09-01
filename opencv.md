@@ -1,6 +1,7 @@
 
 bugs of opencv
 ==================
+** This work done with 360 TeamSerious **
 
 # 1. out-of-bound write in FillColorRow4
 
