@@ -1,7 +1,7 @@
 libav pocs
 ===========
 
-## 1-
+## 1-avconv-divbyzero
 
 gdb --args  ../avconv -i 1-avconv-divbyzero.wav -i 1-libav-divbyzero.flac -f avi merge.avi
 
@@ -13,4 +13,5 @@ Program received signal SIGFPE, Arithmetic exception.
 1587                                 ist->dec_ctx->sample_rate;
 
 
-
+ref:
+https://bugzilla.libav.org/show_bug.cgi?id=1117
