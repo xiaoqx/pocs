@@ -25,3 +25,7 @@ SUMMARY: AddressSanitizer: SEGV /src/libtiff/libtiff/tif_print.c:549 TIFFPrintDi
 
 
 ```
+
+ref:
+
+http://bugzilla.maptools.org/show_bug.cgi?id=2778
