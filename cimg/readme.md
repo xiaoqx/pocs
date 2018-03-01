@@ -20,7 +20,6 @@ READ of size 1 at 0x7f91792ff800 thread T0
     #4 0x4022fa in cimg_library::CImg<unsigned char>::CImg(char const*) ../CImg.h:11161
     #5 0x4022fa in main /src/CImg/fuzz-test/bmp-test.cpp:25
     #6 0x7f917bb8f82f in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2082f)
-    #7 0x402468 in _start (/src/aflbuild/installed/bmp-test+0x402468)
 
 0x7f91792ff800 is located 0 bytes to the right of 6287360-byte region [0x7f9178d00800,0x7f91792ff800)
 allocated by thread T0 here:
@@ -87,7 +86,6 @@ Shadow byte legend (one shadow byte represents 8 application bytes):
     #9 0x4022fa in cimg_library::CImg<unsigned char>::CImg(char const*) ../CImg.h:11161
     #10 0x4022fa in main /src/CImg/fuzz-test/bmp-test.cpp:25
     #11 0x7f1be407082f in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2082f)
-    #12 0x402468 in _start (/src/aflbuild/installed/bmp-test+0x402468)
 
 0x62100001a500 is located 0 bytes inside of 4096-byte region [0x62100001a500,0x62100001b500)
 freed by thread T0 here:
@@ -127,7 +125,6 @@ segmentfault for allocate failed.
     #11 0x4022fa in cimg_library::CImg<unsigned char>::CImg(char const*) ../CImg.h:11161
     #12 0x4022fa in main /src/CImg/fuzz-test/bmp-test.cpp:25
     #13 0x7f88ddc4182f in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2082f)
-    #14 0x402468 in _start (/src/aflbuild/installed/bmp-test+0x402468)
 
 
 ```
