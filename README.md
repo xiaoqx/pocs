@@ -17,6 +17,7 @@ this work done with 360 TeamSeri0us
 ### CVE-2017-12606
 ### CVE-2017-14136
 
+
 ## libjasper
 ### CVE-2017-9782
 
@@ -50,3 +51,11 @@ this work done with 360 TeamSeri0us
 ### CVE-2018-7639.
 ### CVE-2018-7640.
 ### CVE-2018-7641.
+
+## opencv
+(assert-dos)
+### CVE-2018-7712 
+### CVE-2018-7713
+### CVE-2018-7714
+
+
