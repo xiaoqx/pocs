@@ -48,3 +48,57 @@ Program received signal SIGFPE, Arithmetic exception.
     at pstopnm.c:971
 #3  0x0000000000404569 in main (argc=2, argv=0x7fffffffe5c8) at pstopnm.c:1041
 ```
+
+## 3. tifftopnm-heapoverflow-1
+
+```
+$ pstopnm ./tifftopnm-heapoverflow-1
+
+==19==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x60200000ef14 at pc 0x000000405402 bp 0x7fff16aa45f0 sp 0x7fff16aa45e0
+READ of size 1 at 0x60200000ef14 thread T0
+    #0 0x405401  (/src/aflbuild/installed/bin/tifftopnm+0x405401)
+    #1 0x406b91  (/src/aflbuild/installed/bin/tifftopnm+0x406b91)
+    #2 0x403115  (/src/aflbuild/installed/bin/tifftopnm+0x403115)
+    #3 0x7ffb37fb082f in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2082f)
+    #4 0x4039e8  (/src/aflbuild/installed/bin/tifftopnm+0x4039e8)
+
+0x60200000ef14 is located 0 bytes to the right of 4-byte region [0x60200000ef10,0x60200000ef14)
+allocated by thread T0 here:
+    #0 0x7ffb3895e602 in malloc (/usr/lib/x86_64-linux-gnu/libasan.so.2+0x98602)
+    #1 0x4063ae  (/src/aflbuild/installed/bin/tifftopnm+0x4063ae)
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow ??:0 ??
+Shadow bytes around the buggy address:
+  0x0c047fff9d90: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c047fff9da0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c047fff9db0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c047fff9dc0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c047fff9dd0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+=>0x0c047fff9de0: fa fa[04]fa fa fa fd fa fa fa fd fa fa fa fd fa
+  0x0c047fff9df0: fa fa fd fa fa fa fd fa fa fa fd fd fa fa 00 00
+  0x0c047fff9e00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c047fff9e10: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c047fff9e20: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c047fff9e30: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07
+  Heap left redzone:       fa
+  Heap right redzone:      fb
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack partial redzone:   f4
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+==19==ABORTING
+
+```
