@@ -58,4 +58,11 @@ this work done with 360 TeamSeri0us
 ### CVE-2018-7713
 ### CVE-2018-7714
 
+## netpbm
+### CVE-2018-8975.
+
+## exiv2
+### CVE-2018-8976.
+### CVE-2018-8977
+
 
