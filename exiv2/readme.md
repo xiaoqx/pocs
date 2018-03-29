@@ -1,7 +1,7 @@
 exiv2 pocs
-=============
+===========
 
-1. 1-string-format
+## 1. 1-string-format
 
 ```
 $gdb --args ./bin/.libs/lt-exiv2 -pS  $POC
@@ -204,59 +204,49 @@ a$ bt
 ```
 $ gdb --args ./exiv2 -pR $POC
 
-Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
-STRUCTURE OF JPEG2000 FILE: ./crashes-2018-03-23-19-59/exiv2000:id:000027,sig:06,src:000004,op:flip1,pos:43
- address |   length | box       | data
-       0 |       12 | jP        | 
-      12 |       20 | jp2h      | 
-      20 | 1785737760 |  sub: ÿÿ | .p2 ...-jp2h....ihdr..........
-      32 |       45 | jp2h      | 
-terminate called after throwing an instance of 'std::bad_alloc'
-  what():  std::bad_alloc
-
-Program received signal SIGABRT, Aborted.
-[2J[H[;34m[----------------------------------registers-----------------------------------][0m
-[m[;32mRAX[0m: 0x0 
-[;32mRBX[0m: [;34m0x640a98[0m --> [;34m0x7ffff70861c0[0m --> 0xfbad2887 
-[;32mRCX[0m: 0xffffffffffffffff 
-[;32mRDX[0m: 0x6 
-[;32mRSI[0m: 0xded 
-[;32mRDI[0m: 0xded 
-[;32mRBP[0m: [;32m0x7ffff73608a2[0m ("std::bad_alloc")
-[;32mRSP[0m: [;34m0x7fffffffdf78[0m --> [;31m0x7ffff6cfd028[0m (<__GI_abort+328>:	mov    rdx,QWORD PTR fs:0x10)
-[;32mRIP[0m: [;31m0x7ffff6cf9c37[0m (<__GI_raise+55>:	cmp    rax,0xfffffffffffff000)
-[;32mR8 [0m: 0xa ('\n')
-[;32mR9 [0m: [;34m0x7ffff7fe3780[0m (0x00007ffff7fe3780)
-[;32mR10[0m: 0x8 
-[;32mR11[0m: 0x206 
-[;32mR12[0m: [;34m0x7ffff0000950[0m --> 0x0 
-[;32mR13[0m: [;34m0x7fffffffe490[0m --> 0x3 
-[;32mR14[0m: 0x0 
-[;32mR15[0m: 0x0[0m
-[m[;32mEFLAGS[0m: 0x206 ([;32mcarry[0m [;1;31mPARITY[0m [;32madjust[0m [;32mzero[0m [;32msign[0m [;32mtrap[0m [;1;31mINTERRUPT[0m [;32mdirection[0m [;32moverflow[0m)[0m
-[m[;34m[-------------------------------------code-------------------------------------][0m[0m
-[m   0x7ffff6cf9c2d <__GI_raise+45>:[;2m	movsxd rdi,ecx[0m
-   0x7ffff6cf9c30 <__GI_raise+48>:[;2m	mov    eax,0xea[0m
-   0x7ffff6cf9c35 <__GI_raise+53>:[;2;32m	syscall [0m
-=> 0x7ffff6cf9c37 <__GI_raise+55>:[;1;32m	cmp    rax,0xfffffffffffff000[0m
-   0x7ffff6cf9c3d <__GI_raise+61>:[;33m	ja     0x7ffff6cf9c5d <__GI_raise+93>[0m
-   0x7ffff6cf9c3f <__GI_raise+63>:[m	repz ret [0m
-   0x7ffff6cf9c41 <__GI_raise+65>:[m	nop    DWORD PTR [rax+0x0][0m
-   0x7ffff6cf9c48 <__GI_raise+72>:[;31m	test   ecx,ecx[0m[0m
-[m[;34m[------------------------------------stack-------------------------------------][0m[0m
-[m0000| [;34m0x7fffffffdf78[0m --> [;31m0x7ffff6cfd028[0m (<__GI_abort+328>:	mov    rdx,QWORD PTR fs:0x10)[0m
-[m0008| [;34m0x7fffffffdf80[0m --> 0x20 (' ')[0m
-[m0016| [;34m0x7fffffffdf88[0m --> 0x0 [0m
-[m0024| [;34m0x7fffffffdf90[0m --> 0x0 [0m
-[m0032| [;34m0x7fffffffdf98[0m --> 0x0 [0m
-[m0040| [;34m0x7fffffffdfa0[0m --> 0x0 [0m
-[m0048| [;34m0x7fffffffdfa8[0m --> 0x0 [0m
-[m0056| [;34m0x7fffffffdfb0[0m --> 0x0 [0m
-[;34m[------------------------------------------------------------------------------][0m
-[mLegend: [;31mcode[0m, [;34mdata[0m, [;32mrodata[0m, value[0m
-[mStopped reason: [;31mSIGABRT[0m[0m
+[----------------------------------registers-----------------------------------]
+RAX: 0x0
+RBX: 0x640a98 --> 0x7ffff70861c0 --> 0xfbad2887
+RCX: 0xffffffffffffffff
+RDX: 0x6
+RSI: 0xe75
+RDI: 0xe75
+RBP: 0x7ffff73608a2 ("std::bad_alloc")
+RSP: 0x7fffffffdf98 --> 0x7ffff6cfd028 (<__GI_abort+328>:       mov    rdx,QWORD PTR fs:0x10)
+RIP: 0x7ffff6cf9c37 (<__GI_raise+55>:   cmp    rax,0xfffffffffffff000)
+R8 : 0xa ('\n')
+R9 : 0x7ffff7fe3780 (0x00007ffff7fe3780)
+R10: 0x8
+R11: 0x202
+R12: 0x7ffff0000950 --> 0x0
+R13: 0x7fffffffe4b0 --> 0x3
+R14: 0x0
+R15: 0x0
+EFLAGS: 0x202 (carry parity adjust zero sign trap INTERRUPT direction overflow)
+[-------------------------------------code-------------------------------------]
+   0x7ffff6cf9c2d <__GI_raise+45>:      movsxd rdi,ecx
+   0x7ffff6cf9c30 <__GI_raise+48>:      mov    eax,0xea
+   0x7ffff6cf9c35 <__GI_raise+53>:      syscall
+=> 0x7ffff6cf9c37 <__GI_raise+55>:      cmp    rax,0xfffffffffffff000
+   0x7ffff6cf9c3d <__GI_raise+61>:      ja     0x7ffff6cf9c5d <__GI_raise+93>
+   0x7ffff6cf9c3f <__GI_raise+63>:      repz ret
+   0x7ffff6cf9c41 <__GI_raise+65>:      nop    DWORD PTR [rax+0x0]
+   0x7ffff6cf9c48 <__GI_raise+72>:      test   ecx,ecx
+[------------------------------------stack-------------------------------------]
+0000| 0x7fffffffdf98 --> 0x7ffff6cfd028 (<__GI_abort+328>:      mov    rdx,QWORD PTR fs:0x10)
+0008| 0x7fffffffdfa0 --> 0x20 (' ')
+0016| 0x7fffffffdfa8 --> 0x0
+0024| 0x7fffffffdfb0 --> 0x0
+0032| 0x7fffffffdfb8 --> 0x0
+0040| 0x7fffffffdfc0 --> 0x0
+0048| 0x7fffffffdfc8 --> 0x0
+0056| 0x7fffffffdfd0 --> 0x0
+[------------------------------------------------------------------------------]
+Legend: code, data, rodata, value
+Stopped reason: SIGABRT
 0x00007ffff6cf9c37 in __GI_raise (sig=sig@entry=0x6) at ../nptl/sysdeps/unix/sysv/linux/raise.c:56
-56	../nptl/sysdeps/unix/sysv/linux/raise.c: No such file or directory.
+56      ../nptl/sysdeps/unix/sysv/linux/raise.c: No such file or directory.
+gdb-peda$ bt
 #0  0x00007ffff6cf9c37 in __GI_raise (sig=sig@entry=0x6) at ../nptl/sysdeps/unix/sysv/linux/raise.c:56
 #1  0x00007ffff6cfd028 in __GI_abort () at abort.c:89
 #2  0x00007ffff7302535 in __gnu_cxx::__verbose_terminate_handler() () from /usr/lib/x86_64-linux-gnu/libstdc++.so.6
@@ -265,20 +255,20 @@ Program received signal SIGABRT, Aborted.
 #5  0x00007ffff7300922 in __cxa_throw () from /usr/lib/x86_64-linux-gnu/libstdc++.so.6
 #6  0x00007ffff7300e0d in operator new(unsigned long) () from /usr/lib/x86_64-linux-gnu/libstdc++.so.6
 #7  0x00007ffff7300ea9 in operator new[](unsigned long) () from /usr/lib/x86_64-linux-gnu/libstdc++.so.6
-#8  0x000000000042bfbc in Exiv2::DataBuf::DataBuf (this=0x7fffffffe220, size=0xfffffffffffffffe) at ../include/exiv2/types.hpp:206
-#9  0x00007ffff7793273 in Exiv2::Jp2Image::printStructure (this=0x644b20, out=..., option=Exiv2::kpsRecursive, depth=0x0) at jp2image.cpp:507
-#10 0x000000000041ca7e in Action::Print::printStructure (this=0x644800, out=..., option=Exiv2::kpsRecursive) at actions.cpp:283
-#11 0x000000000041c816 in Action::Print::run (this=0x644800, path="./crashes-2018-03-23-19-59/exiv2000:id:000027,sig:06,src:000004,op:flip1,pos:43") at actions.cpp:247
-#12 0x000000000040e2b7 in main (argc=0x3, argv=0x7fffffffe498) at exiv2.cpp:166
-#13 0x00007ffff6ce4f45 in __libc_start_main (main=0x40dffe <main(int, char* const*)>, argc=0x3, argv=0x7fffffffe498, init=<optimized out>, fini=<optimized out>, rtld_fini=<optimized out>, stack_end=0x7fffffffe488) at libc-start.c:287
+#8  0x000000000042bfbc in Exiv2::DataBuf::DataBuf (this=0x7fffffffe240, size=0xfffffffffffffffe) at ../include/exiv2/types.hpp:206
+#9  0x00007ffff7793273 in Exiv2::Jp2Image::printStructure (this=0x644af0, out=..., option=Exiv2::kpsRecursive, depth=0x0) at jp2image.cpp:507
+#10 0x000000000041ca7e in Action::Print::printStructure (this=0x6447d0, out=..., option=Exiv2::kpsRecursive) at actions.cpp:283
+#11 0x000000000041c816 in Action::Print::run (this=0x6447d0, path="/data/xqx/projects/xiaoqx-pocs/exiv2/4-DataBuf-abort-1") at actions.cpp:247
+#12 0x000000000040e2b7 in main (argc=0x3, argv=0x7fffffffe4b8) at exiv2.cpp:166
+#13 0x00007ffff6ce4f45 in __libc_start_main (main=0x40dffe <main(int, char* const*)>, argc=0x3, argv=0x7fffffffe4b8, init=<optimized out>, fini=<optimized out>, rtld_fini=<optimized out>, stack_end=0x7fffffffe4a8) at libc-start.c:287
 #14 0x000000000040df39 in _start ()
+
+
 Description: Abort signal
 Short description: AbortSignal (20/22)
 Hash: f4d11dd33ec4a3410221da428e990ecd.7df5c29d65892b74ce337b4abda05326
 Exploitability Classification: UNKNOWN
 Explanation: The target is stopped on a SIGABRT. SIGABRTs are often generated by libc and compiled check-code to indicate potentially exploitable conditions. Unfortunately this command does not yet further analyze these crashes.
--
-
 
 
 ```
