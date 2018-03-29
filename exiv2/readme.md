@@ -70,9 +70,8 @@ gdb-peda$ bt
 ## 2-invalid-memory-access
 
 ```
-$gdb ./bin/.libs/lt-exiv2 -pt $POC
+$ gdb ./bin/.libs/lt-exiv2 -pt $POC
 
-```sters-----------------------------------]
 RAX: 0xb8
 RBX: 0x0
 RCX: 0x7fffffffdb10 --> 0x404570 --> 0xd00220000502f ('/P')
@@ -126,4 +125,327 @@ gdb-peda$ bt
 #8  0x000000000040e337 in main (argc=0x3, argv=0x7fffffffe498) at exiv2.cpp:166
 #9  0x00007ffff6cdcf45 in __libc_start_main (main=0x40e07e <main(int, char* const*)>, argc=0x3, argv=0x7fffffffe498, init=<optimized out>, fini=<optimized out>, rtld_fini=<optimized out>, stack_end=0x7fffffffe488) at libc-start.c:287
 #10 0x000000000040dfb9 in _start ()
+
+
+## 3-vfpirntf_internal-outofbound-read
+
+./exiv2 -pR  $POC
+
+```
+[----------------------------------registers-----------------------------------]
+RAX: 0x0
+RBX: 0x7fffffffd520 --> 0x7ffffbad8001
+RCX: 0xffffffffffffffff
+RDX: 0x28 ('(')
+RSI: 0x7fffffe8
+RDI: 0x1000000000000
+RBP: 0x7fffffffd510 --> 0x644b70 ("      50 | 0xfffffff")
+RSP: 0x7fffffffcf30 --> 0x0
+RIP: 0x7ffff6d0e943 (<_IO_vfprintf_internal+7427>:      repnz scas al,BYTE PTR es:[rdi])
+R8 : 0x7fffffff
+R9 : 0x7ffff7fe3780 (0x00007ffff7fe3780)
+R10: 0x7ffff7083fe0 --> 0x0
+R11: 0x0
+R12: 0x7ffff6d10f69 (<_IO_vfprintf_internal+17193>:     cmp    BYTE PTR [rbp-0x508],0x0)
+R13: 0x1000000000000
+R14: 0x7ffff78a3e99 ("%8ld | 0xff%02x %-5s")
+R15: 0x7fffffffd6c0 --> 0x3000000028 ('(')
+EFLAGS: 0x10286 (carry PARITY adjust zero SIGN trap INTERRUPT direction overflow)
+[-------------------------------------code-------------------------------------]
+   0x7ffff6d0e93a <_IO_vfprintf_internal+7418>: xor    eax,eax
+   0x7ffff6d0e93c <_IO_vfprintf_internal+7420>: or     rcx,0xffffffffffffffff
+   0x7ffff6d0e940 <_IO_vfprintf_internal+7424>: mov    rdi,r13
+=> 0x7ffff6d0e943 <_IO_vfprintf_internal+7427>: repnz scas al,BYTE PTR es:[rdi]
+   0x7ffff6d0e945 <_IO_vfprintf_internal+7429>: mov    DWORD PTR [rbp-0x508],0x0
+   0x7ffff6d0e94f <_IO_vfprintf_internal+7439>: mov    rsi,rcx
+   0x7ffff6d0e952 <_IO_vfprintf_internal+7442>: not    rsi
+   0x7ffff6d0e955 <_IO_vfprintf_internal+7445>: lea    r10,[rsi-0x1]
+[------------------------------------stack-------------------------------------]
+0000| 0x7fffffffcf30 --> 0x0
+0008| 0x7fffffffcf38 --> 0x0
+0016| 0x7fffffffcf40 --> 0x0
+0024| 0x7fffffffcf48 --> 0x0
+0032| 0x7fffffffcf50 --> 0x0
+0040| 0x7fffffffcf58 --> 0x0
+0048| 0x7fffffffcf60 --> 0x7fffffffd090 --> 0xffffffffffffffff
+0056| 0x7fffffffcf68 --> 0x0
+[------------------------------------------------------------------------------]
+Legend: code, data, rodata, value
+Stopped reason: SIGSEGV
+0x00007ffff6d0e943 in _IO_vfprintf_internal (s=s@entry=0x7fffffffd520, format=<optimized out>, format@entry=0x7ffff78a3e99 "%8ld | 0xff%02x %-5s", ap=ap@entry=0x7fffffffd6c0) at vfprintf.c:1661
+1661    vfprintf.c: No such file or directory.
+gdb-peda$ bt
+#0  0x00007ffff6d0e943 in _IO_vfprintf_internal (s=s@entry=0x7fffffffd520, format=<optimized out>, format@entry=0x7ffff78a3e99 "%8ld | 0xff%02x %-5s", ap=ap@entry=0x7fffffffd6c0) at vfprintf.c:1661
+#1  0x00007ffff6d35499 in _IO_vsnprintf (string=0x644b70 "      50 | 0xfffffff", maxlen=<optimized out>, format=0x7ffff78a3e99 "%8ld | 0xff%02x %-5s", args=0x7fffffffd6c0) at vsnprintf.c:119
+#2  0x00007ffff7784e1d in Exiv2::Internal::stringFormat (format=0x7ffff78a3e99 "%8ld | 0xff%02x %-5s") at image.cpp:1013
+#3  0x00007ffff7799089 in Exiv2::JpegBase::printStructure (this=0x644a80, out=..., option=Exiv2::kpsRecursive, depth=0x0) at jpgimage.cpp:787
+#4  0x000000000041ca7e in Action::Print::printStructure (this=0x644800, out=..., option=Exiv2::kpsRecursive) at actions.cpp:283
+#5  0x000000000041c816 in Action::Print::run (this=0x644800, path="./crashes-2018-03-23-19-59/exiv2000:id:000000,sig:11,src:000000,op:flip1,pos:2") at actions.cpp:247
+#6  0x000000000040e2b7 in main (argc=0x3, argv=0x7fffffffe498) at exiv2.cpp:166
+#7  0x00007ffff6ce4f45 in __libc_start_main (main=0x40dffe <main(int, char* const*)>, argc=0x3, argv=0x7fffffffe498, init=<optimized out>, fini=<optimized out>, rtld_fini=<optimized out>, stack_end=0x7fffffffe488) at libc-start.c:287
+#8  0x000000000040df39 in _start ()
+
+a$ bt
+#0  0x00007ffff6d0e943 in _IO_vfprintf_internal (s=s@entry=0x7fffffffd520, format=<optimized out>, format@entry=0x7ffff78a3e99 "%8ld | 0xff%02x %-5s", ap=ap@entry=0x7fffffffd6c0) at vfprintf.c:1661
+#1  0x00007ffff6d35499 in _IO_vsnprintf (string=0x644b70 "      50 | 0xfffffff", maxlen=<optimized out>, format=0x7ffff78a3e99 "%8ld | 0xff%02x %-5s", args=0x7fffffffd6c0) at vsnprintf.c:119
+#2  0x00007ffff7784e1d in Exiv2::Internal::stringFormat (format=0x7ffff78a3e99 "%8ld | 0xff%02x %-5s") at image.cpp:1013
+#3  0x00007ffff7799089 in Exiv2::JpegBase::printStructure (this=0x644a80, out=..., option=Exiv2::kpsRecursive, depth=0x0) at jpgimage.cpp:787
+#4  0x000000000041ca7e in Action::Print::printStructure (this=0x644800, out=..., option=Exiv2::kpsRecursive) at actions.cpp:283
+#5  0x000000000041c816 in Action::Print::run (this=0x644800, path="./crashes-2018-03-23-19-59/exiv2000:id:000000,sig:11,src:000000,op:flip1,pos:2") at actions.cpp:247
+#6  0x000000000040e2b7 in main (argc=0x3, argv=0x7fffffffe498) at exiv2.cpp:166
+#7  0x00007ffff6ce4f45 in __libc_start_main (main=0x40dffe <main(int, char* const*)>, argc=0x3, argv=0x7fffffffe498, init=<optimized out>, fini=<optimized out>, rtld_fini=<optimized out>, stack_end=0x7fffffffe488) at libc-start.c:287
+#8  0x000000000040df39 in _start ()
+
+
+```
+
+## 4-DataBuf-abort-1
+
+```
+$ gdb --args ./exiv2 -pR $POC
+
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+STRUCTURE OF JPEG2000 FILE: ./crashes-2018-03-23-19-59/exiv2000:id:000027,sig:06,src:000004,op:flip1,pos:43
+ address |   length | box       | data
+       0 |       12 | jP        | 
+      12 |       20 | jp2h      | 
+      20 | 1785737760 |  sub: ÿÿ | .p2 ...-jp2h....ihdr..........
+      32 |       45 | jp2h      | 
+terminate called after throwing an instance of 'std::bad_alloc'
+  what():  std::bad_alloc
+
+Program received signal SIGABRT, Aborted.
+[2J[H[;34m[----------------------------------registers-----------------------------------][0m
+[m[;32mRAX[0m: 0x0 
+[;32mRBX[0m: [;34m0x640a98[0m --> [;34m0x7ffff70861c0[0m --> 0xfbad2887 
+[;32mRCX[0m: 0xffffffffffffffff 
+[;32mRDX[0m: 0x6 
+[;32mRSI[0m: 0xded 
+[;32mRDI[0m: 0xded 
+[;32mRBP[0m: [;32m0x7ffff73608a2[0m ("std::bad_alloc")
+[;32mRSP[0m: [;34m0x7fffffffdf78[0m --> [;31m0x7ffff6cfd028[0m (<__GI_abort+328>:	mov    rdx,QWORD PTR fs:0x10)
+[;32mRIP[0m: [;31m0x7ffff6cf9c37[0m (<__GI_raise+55>:	cmp    rax,0xfffffffffffff000)
+[;32mR8 [0m: 0xa ('\n')
+[;32mR9 [0m: [;34m0x7ffff7fe3780[0m (0x00007ffff7fe3780)
+[;32mR10[0m: 0x8 
+[;32mR11[0m: 0x206 
+[;32mR12[0m: [;34m0x7ffff0000950[0m --> 0x0 
+[;32mR13[0m: [;34m0x7fffffffe490[0m --> 0x3 
+[;32mR14[0m: 0x0 
+[;32mR15[0m: 0x0[0m
+[m[;32mEFLAGS[0m: 0x206 ([;32mcarry[0m [;1;31mPARITY[0m [;32madjust[0m [;32mzero[0m [;32msign[0m [;32mtrap[0m [;1;31mINTERRUPT[0m [;32mdirection[0m [;32moverflow[0m)[0m
+[m[;34m[-------------------------------------code-------------------------------------][0m[0m
+[m   0x7ffff6cf9c2d <__GI_raise+45>:[;2m	movsxd rdi,ecx[0m
+   0x7ffff6cf9c30 <__GI_raise+48>:[;2m	mov    eax,0xea[0m
+   0x7ffff6cf9c35 <__GI_raise+53>:[;2;32m	syscall [0m
+=> 0x7ffff6cf9c37 <__GI_raise+55>:[;1;32m	cmp    rax,0xfffffffffffff000[0m
+   0x7ffff6cf9c3d <__GI_raise+61>:[;33m	ja     0x7ffff6cf9c5d <__GI_raise+93>[0m
+   0x7ffff6cf9c3f <__GI_raise+63>:[m	repz ret [0m
+   0x7ffff6cf9c41 <__GI_raise+65>:[m	nop    DWORD PTR [rax+0x0][0m
+   0x7ffff6cf9c48 <__GI_raise+72>:[;31m	test   ecx,ecx[0m[0m
+[m[;34m[------------------------------------stack-------------------------------------][0m[0m
+[m0000| [;34m0x7fffffffdf78[0m --> [;31m0x7ffff6cfd028[0m (<__GI_abort+328>:	mov    rdx,QWORD PTR fs:0x10)[0m
+[m0008| [;34m0x7fffffffdf80[0m --> 0x20 (' ')[0m
+[m0016| [;34m0x7fffffffdf88[0m --> 0x0 [0m
+[m0024| [;34m0x7fffffffdf90[0m --> 0x0 [0m
+[m0032| [;34m0x7fffffffdf98[0m --> 0x0 [0m
+[m0040| [;34m0x7fffffffdfa0[0m --> 0x0 [0m
+[m0048| [;34m0x7fffffffdfa8[0m --> 0x0 [0m
+[m0056| [;34m0x7fffffffdfb0[0m --> 0x0 [0m
+[;34m[------------------------------------------------------------------------------][0m
+[mLegend: [;31mcode[0m, [;34mdata[0m, [;32mrodata[0m, value[0m
+[mStopped reason: [;31mSIGABRT[0m[0m
+0x00007ffff6cf9c37 in __GI_raise (sig=sig@entry=0x6) at ../nptl/sysdeps/unix/sysv/linux/raise.c:56
+56	../nptl/sysdeps/unix/sysv/linux/raise.c: No such file or directory.
+#0  0x00007ffff6cf9c37 in __GI_raise (sig=sig@entry=0x6) at ../nptl/sysdeps/unix/sysv/linux/raise.c:56
+#1  0x00007ffff6cfd028 in __GI_abort () at abort.c:89
+#2  0x00007ffff7302535 in __gnu_cxx::__verbose_terminate_handler() () from /usr/lib/x86_64-linux-gnu/libstdc++.so.6
+#3  0x00007ffff73006d6 in ?? () from /usr/lib/x86_64-linux-gnu/libstdc++.so.6
+#4  0x00007ffff7300703 in std::terminate() () from /usr/lib/x86_64-linux-gnu/libstdc++.so.6
+#5  0x00007ffff7300922 in __cxa_throw () from /usr/lib/x86_64-linux-gnu/libstdc++.so.6
+#6  0x00007ffff7300e0d in operator new(unsigned long) () from /usr/lib/x86_64-linux-gnu/libstdc++.so.6
+#7  0x00007ffff7300ea9 in operator new[](unsigned long) () from /usr/lib/x86_64-linux-gnu/libstdc++.so.6
+#8  0x000000000042bfbc in Exiv2::DataBuf::DataBuf (this=0x7fffffffe220, size=0xfffffffffffffffe) at ../include/exiv2/types.hpp:206
+#9  0x00007ffff7793273 in Exiv2::Jp2Image::printStructure (this=0x644b20, out=..., option=Exiv2::kpsRecursive, depth=0x0) at jp2image.cpp:507
+#10 0x000000000041ca7e in Action::Print::printStructure (this=0x644800, out=..., option=Exiv2::kpsRecursive) at actions.cpp:283
+#11 0x000000000041c816 in Action::Print::run (this=0x644800, path="./crashes-2018-03-23-19-59/exiv2000:id:000027,sig:06,src:000004,op:flip1,pos:43") at actions.cpp:247
+#12 0x000000000040e2b7 in main (argc=0x3, argv=0x7fffffffe498) at exiv2.cpp:166
+#13 0x00007ffff6ce4f45 in __libc_start_main (main=0x40dffe <main(int, char* const*)>, argc=0x3, argv=0x7fffffffe498, init=<optimized out>, fini=<optimized out>, rtld_fini=<optimized out>, stack_end=0x7fffffffe488) at libc-start.c:287
+#14 0x000000000040df39 in _start ()
+Description: Abort signal
+Short description: AbortSignal (20/22)
+Hash: f4d11dd33ec4a3410221da428e990ecd.7df5c29d65892b74ce337b4abda05326
+Exploitability Classification: UNKNOWN
+Explanation: The target is stopped on a SIGABRT. SIGABRTs are often generated by libc and compiled check-code to indicate potentially exploitable conditions. Unfortunately this command does not yet further analyze these crashes.
+-
+
+
+
+```
+
+## 5-printStructure-outbound-read-1
+
+```
+$ valgrind exiv2 $POC
+
+==29031== Memcheck, a memory error detector
+==29031== Copyright (C) 2002-2013, and GNU GPL'd, by Julian Seward et al.
+==29031== Using Valgrind-3.10.1 and LibVEX; rerun with -h for copyright info
+==29031== Command: ./installed/bin/exiv2 crashes-2018-03-27-15-54/exiv2000:id:000007,sig:11,src:000947,op:havoc,rep:4
+==29031== 
+==29031== Invalid read of size 1
+==29031==    at 0x523B295: Exiv2::IptcData::printStructure(std::ostream&, unsigned char const*, unsigned long, unsigned int) (iptc.cpp:354)
+==29031==    by 0x52316CC: Exiv2::Image::printIFDStructure(Exiv2::BasicIo&, std::ostream&, Exiv2::PrintStructureOption, unsigned int, bool, char, int) (image.cpp:470)
+==29031==    by 0x5231E0F: Exiv2::Image::printTiffStructure(Exiv2::BasicIo&, std::ostream&, Exiv2::PrintStructureOption, int, unsigned long) (image.cpp:533)
+==29031==    by 0x52CB2FA: Exiv2::TiffImage::printStructure(std::ostream&, Exiv2::PrintStructureOption, int) (tiffimage.cpp:344)
+==29031==    by 0x52CA550: Exiv2::TiffImage::readMetadata() (tiffimage.cpp:187)
+==29031==    by 0x41CBE8: Action::Print::printSummary() (actions.cpp:296)
+==29031==    by 0x41C7A6: Action::Print::run(std::string const&) (actions.cpp:242)
+==29031==    by 0x40E2B6: main (exiv2.cpp:166)
+==29031==  Address 0x68b5ba2 is 0 bytes after a block of size 2 alloc'd
+==29031==    at 0x4C2B800: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==29031==    by 0x5231653: Exiv2::Image::printIFDStructure(Exiv2::BasicIo&, std::ostream&, Exiv2::PrintStructureOption, unsigned int, bool, char, int) (image.cpp:467)
+==29031==    by 0x5231E0F: Exiv2::Image::printTiffStructure(Exiv2::BasicIo&, std::ostream&, Exiv2::PrintStructureOption, int, unsigned long) (image.cpp:533)
+==29031==    by 0x52CB2FA: Exiv2::TiffImage::printStructure(std::ostream&, Exiv2::PrintStructureOption, int) (tiffimage.cpp:344)
+==29031==    by 0x52CA550: Exiv2::TiffImage::readMetadata() (tiffimage.cpp:187)
+==29031==    by 0x41CBE8: Action::Print::printSummary() (actions.cpp:296)
+==29031==    by 0x41C7A6: Action::Print::run(std::string const&) (actions.cpp:242)
+==29031==    by 0x40E2B6: main (exiv2.cpp:166)
+==29031== 
+==29031== 
+==29031== Process terminating with default action of signal 11 (SIGSEGV)
+==29031==  Access not within mapped region at address 0x6C9B000
+==29031==    at 0x523B295: Exiv2::IptcData::printStructure(std::ostream&, unsigned char const*, unsigned long, unsigned int) (iptc.cpp:354)
+==29031==    by 0x52316CC: Exiv2::Image::printIFDStructure(Exiv2::BasicIo&, std::ostream&, Exiv2::PrintStructureOption, unsigned int, bool, char, int) (image.cpp:470)
+==29031==    by 0x5231E0F: Exiv2::Image::printTiffStructure(Exiv2::BasicIo&, std::ostream&, Exiv2::PrintStructureOption, int, unsigned long) (image.cpp:533)
+==29031==    by 0x52CB2FA: Exiv2::TiffImage::printStructure(std::ostream&, Exiv2::PrintStructureOption, int) (tiffimage.cpp:344)
+==29031==    by 0x52CA550: Exiv2::TiffImage::readMetadata() (tiffimage.cpp:187)
+==29031==    by 0x41CBE8: Action::Print::printSummary() (actions.cpp:296)
+==29031==    by 0x41C7A6: Action::Print::run(std::string const&) (actions.cpp:242)
+==29031==    by 0x40E2B6: main (exiv2.cpp:166)
+==29031==  If you believe this happened as a result of a stack
+==29031==  overflow in your program's main thread (unlikely but
+==29031==  possible), you can try to increase the size of the
+==29031==  main thread stack using the --main-stacksize= flag.
+==29031==  The main thread stack size used in this run was 8388608.
+==29031== 
+==29031== HEAP SUMMARY:
+==29031==     in use at exit: 33,395 bytes in 697 blocks
+==29031==   total heap usage: 920 allocs, 223 frees, 46,386 bytes allocated
+==29031== 
+==29031== LEAK SUMMARY:
+==29031==    definitely lost: 0 bytes in 0 blocks
+==29031==    indirectly lost: 0 bytes in 0 blocks
+==29031==      possibly lost: 14,018 bytes in 348 blocks
+==29031==    still reachable: 19,377 bytes in 349 blocks
+==29031==         suppressed: 0 bytes in 0 blocks
+==29031== Rerun with --leak-check=full to see details of leaked memory
+==29031== 
+==29031== For counts of detected and suppressed errors, rerun with: -v
+==29031== ERROR SUMMARY: 4084831 errors from 1 contexts (suppressed: 0 from 0)
+```
+## 6-binaryToString-outbound-read-1
+
+```
+$ valgrind exiv2 $POC
+
+==29386== Memcheck, a memory error detector
+==29386== Copyright (C) 2002-2013, and GNU GPL'd, by Julian Seward et al.
+==29386== Using Valgrind-3.10.1 and LibVEX; rerun with -h for copyright info
+==29386== Command: ./installed/bin/exiv2 crashes-2018-03-27-15-54/exiv2000:id:000020,sig:11,src:001299+000137,op:splice,rep:2
+==29386== 
+==29386== Invalid read of size 1
+==29386==    at 0x5233FE8: Exiv2::Internal::binaryToString(unsigned char const*, unsigned long, unsigned long) (image.cpp:1031)
+==29386==    by 0x523B43C: Exiv2::IptcData::printStructure(std::ostream&, unsigned char const*, unsigned long, unsigned int) (iptc.cpp:364)
+==29386==    by 0x52316CC: Exiv2::Image::printIFDStructure(Exiv2::BasicIo&, std::ostream&, Exiv2::PrintStructureOption, unsigned int, bool, char, int) (image.cpp:470)
+==29386==    by 0x5231E0F: Exiv2::Image::printTiffStructure(Exiv2::BasicIo&, std::ostream&, Exiv2::PrintStructureOption, int, unsigned long) (image.cpp:533)
+==29386==    by 0x52CB2FA: Exiv2::TiffImage::printStructure(std::ostream&, Exiv2::PrintStructureOption, int) (tiffimage.cpp:344)
+==29386==    by 0x52CA550: Exiv2::TiffImage::readMetadata() (tiffimage.cpp:187)
+==29386==    by 0x41CBE8: Action::Print::printSummary() (actions.cpp:296)
+==29386==    by 0x41C7A6: Action::Print::run(std::string const&) (actions.cpp:242)
+==29386==    by 0x40E2B6: main (exiv2.cpp:166)
+==29386==  Address 0x68b55b5 is 0 bytes after a block of size 21 alloc'd
+==29386==    at 0x4C2B800: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==29386==    by 0x5231653: Exiv2::Image::printIFDStructure(Exiv2::BasicIo&, std::ostream&, Exiv2::PrintStructureOption, unsigned int, bool, char, int) (image.cpp:467)
+==29386==    by 0x5231E0F: Exiv2::Image::printTiffStructure(Exiv2::BasicIo&, std::ostream&, Exiv2::PrintStructureOption, int, unsigned long) (image.cpp:533)
+==29386==    by 0x52CB2FA: Exiv2::TiffImage::printStructure(std::ostream&, Exiv2::PrintStructureOption, int) (tiffimage.cpp:344)
+==29386==    by 0x52CA550: Exiv2::TiffImage::readMetadata() (tiffimage.cpp:187)
+==29386==    by 0x41CBE8: Action::Print::printSummary() (actions.cpp:296)
+==29386==    by 0x41C7A6: Action::Print::run(std::string const&) (actions.cpp:242)
+==29386==    by 0x40E2B6: main (exiv2.cpp:166)
+==29386== 
+==29386== Invalid read of size 1
+==29386==    at 0x523B4B9: Exiv2::IptcData::printStructure(std::ostream&, unsigned char const*, unsigned long, unsigned int) (iptc.cpp:357)
+==29386==    by 0x52316CC: Exiv2::Image::printIFDStructure(Exiv2::BasicIo&, std::ostream&, Exiv2::PrintStructureOption, unsigned int, bool, char, int) (image.cpp:470)
+==29386==    by 0x5231E0F: Exiv2::Image::printTiffStructure(Exiv2::BasicIo&, std::ostream&, Exiv2::PrintStructureOption, int, unsigned long) (image.cpp:533)
+==29386==    by 0x52CB2FA: Exiv2::TiffImage::printStructure(std::ostream&, Exiv2::PrintStructureOption, int) (tiffimage.cpp:344)
+==29386==    by 0x52CA550: Exiv2::TiffImage::readMetadata() (tiffimage.cpp:187)
+==29386==    by 0x41CBE8: Action::Print::printSummary() (actions.cpp:296)
+==29386==    by 0x41C7A6: Action::Print::run(std::string const&) (actions.cpp:242)
+==29386==    by 0x40E2B6: main (exiv2.cpp:166)
+==29386==  Address 0x68b56b8 is 88 bytes inside a block of size 537 free'd
+==29386==    at 0x4C2C2BC: operator delete(void*) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==29386==    by 0x5703540: std::basic_ostringstream<char, std::char_traits<char>, std::allocator<char> >::~basic_ostringstream() (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==29386==    by 0x520D7BB: Exiv2::IptcDataSets::dataSetName(unsigned short, unsigned short) (datasets.cpp:494)
+==29386==    by 0x523B399: Exiv2::IptcData::printStructure(std::ostream&, unsigned char const*, unsigned long, unsigned int) (iptc.cpp:362)
+==29386==    by 0x52316CC: Exiv2::Image::printIFDStructure(Exiv2::BasicIo&, std::ostream&, Exiv2::PrintStructureOption, unsigned int, bool, char, int) (image.cpp:470)
+==29386==    by 0x5231E0F: Exiv2::Image::printTiffStructure(Exiv2::BasicIo&, std::ostream&, Exiv2::PrintStructureOption, int, unsigned long) (image.cpp:533)
+==29386==    by 0x52CB2FA: Exiv2::TiffImage::printStructure(std::ostream&, Exiv2::PrintStructureOption, int) (tiffimage.cpp:344)
+==29386==    by 0x52CA550: Exiv2::TiffImage::readMetadata() (tiffimage.cpp:187)
+==29386==    by 0x41CBE8: Action::Print::printSummary() (actions.cpp:296)
+==29386==    by 0x41C7A6: Action::Print::run(std::string const&) (actions.cpp:242)
+==29386==    by 0x40E2B6: main (exiv2.cpp:166)
+==29386== 
+==29386== Invalid read of size 1
+==29386==    at 0x523B295: Exiv2::IptcData::printStructure(std::ostream&, unsigned char const*, unsigned long, unsigned int) (iptc.cpp:354)
+==29386==    by 0x52316CC: Exiv2::Image::printIFDStructure(Exiv2::BasicIo&, std::ostream&, Exiv2::PrintStructureOption, unsigned int, bool, char, int) (image.cpp:470)
+==29386==    by 0x5231E0F: Exiv2::Image::printTiffStructure(Exiv2::BasicIo&, std::ostream&, Exiv2::PrintStructureOption, int, unsigned long) (image.cpp:533)
+==29386==    by 0x52CB2FA: Exiv2::TiffImage::printStructure(std::ostream&, Exiv2::PrintStructureOption, int) (tiffimage.cpp:344)
+==29386==    by 0x52CA550: Exiv2::TiffImage::readMetadata() (tiffimage.cpp:187)
+==29386==    by 0x41CBE8: Action::Print::printSummary() (actions.cpp:296)
+==29386==    by 0x41C7A6: Action::Print::run(std::string const&) (actions.cpp:242)
+==29386==    by 0x40E2B6: main (exiv2.cpp:166)
+==29386==  Address 0x68b6382 is 0 bytes after a block of size 2 alloc'd
+==29386==    at 0x4C2B800: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==29386==    by 0x5231653: Exiv2::Image::printIFDStructure(Exiv2::BasicIo&, std::ostream&, Exiv2::PrintStructureOption, unsigned int, bool, char, int) (image.cpp:467)
+==29386==    by 0x5231E0F: Exiv2::Image::printTiffStructure(Exiv2::BasicIo&, std::ostream&, Exiv2::PrintStructureOption, int, unsigned long) (image.cpp:533)
+==29386==    by 0x52CB2FA: Exiv2::TiffImage::printStructure(std::ostream&, Exiv2::PrintStructureOption, int) (tiffimage.cpp:344)
+==29386==    by 0x52CA550: Exiv2::TiffImage::readMetadata() (tiffimage.cpp:187)
+==29386==    by 0x41CBE8: Action::Print::printSummary() (actions.cpp:296)
+==29386==    by 0x41C7A6: Action::Print::run(std::string const&) (actions.cpp:242)
+==29386==    by 0x40E2B6: main (exiv2.cpp:166)
+==29386== 
+==29386== 
+==29386== Process terminating with default action of signal 11 (SIGSEGV)
+==29386==  Access not within mapped region at address 0x6C9B000
+==29386==    at 0x523B295: Exiv2::IptcData::printStructure(std::ostream&, unsigned char const*, unsigned long, unsigned int) (iptc.cpp:354)
+==29386==    by 0x52316CC: Exiv2::Image::printIFDStructure(Exiv2::BasicIo&, std::ostream&, Exiv2::PrintStructureOption, unsigned int, bool, char, int) (image.cpp:470)
+==29386==    by 0x5231E0F: Exiv2::Image::printTiffStructure(Exiv2::BasicIo&, std::ostream&, Exiv2::PrintStructureOption, int, unsigned long) (image.cpp:533)
+==29386==    by 0x52CB2FA: Exiv2::TiffImage::printStructure(std::ostream&, Exiv2::PrintStructureOption, int) (tiffimage.cpp:344)
+==29386==    by 0x52CA550: Exiv2::TiffImage::readMetadata() (tiffimage.cpp:187)
+==29386==    by 0x41CBE8: Action::Print::printSummary() (actions.cpp:296)
+==29386==    by 0x41C7A6: Action::Print::run(std::string const&) (actions.cpp:242)
+==29386==    by 0x40E2B6: main (exiv2.cpp:166)
+==29386==  If you believe this happened as a result of a stack
+==29386==  overflow in your program's main thread (unlikely but
+==29386==  possible), you can try to increase the size of the
+==29386==  main thread stack using the --main-stacksize= flag.
+==29386==  The main thread stack size used in this run was 8388608.
+==29386== 
+==29386== HEAP SUMMARY:
+==29386==     in use at exit: 33,451 bytes in 698 blocks
+==29386==   total heap usage: 929 allocs, 231 frees, 47,782 bytes allocated
+==29386== 
+==29386== LEAK SUMMARY:
+==29386==    definitely lost: 0 bytes in 0 blocks
+==29386==    indirectly lost: 0 bytes in 0 blocks
+==29386==      possibly lost: 14,026 bytes in 348 blocks
+==29386==    still reachable: 19,425 bytes in 350 blocks
+==29386==         suppressed: 0 bytes in 0 blocks
+==29386== Rerun with --leak-check=full to see details of leaked memory
+==29386== 
+==29386== For counts of detected and suppressed errors, rerun with: -v
+==29386== ERROR SUMMARY: 4082854 errors from 3 contexts (suppressed: 0 from 0)
+
+```
 
