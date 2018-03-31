@@ -69,4 +69,5 @@ this work done with 360 TeamSeri0us
 ### CVE-2018-9145
 ### CVE-2018-9146
 
-
+## libjasper
+### CVE-2018-9055(pwd)
