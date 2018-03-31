@@ -65,4 +65,8 @@ this work done with 360 TeamSeri0us
 ### CVE-2018-8976.
 ### CVE-2018-8977
 
+### CVE-2018-9144
+### CVE-2018-9145
+### CVE-2018-9146
+
 
