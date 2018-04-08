@@ -440,3 +440,265 @@ $ valgrind exiv2 $POC
 
 ```
 
+## 7-printIFD-divbyzero-1
+
+```
+$ exiv2 -pX $POC
+
+[----------------------------------registers-----------------------------------]
+RAX: 0xffffffffffffffff
+RBX: 0x1
+RCX: 0x7ffff75aa3d8 --> 0x0
+RDX: 0x0
+RSI: 0x0
+RDI: 0x644a90 --> 0x7ffff7b873d0 --> 0x7ffff7731a14 (<Exiv2::(anonymous namespace)::BigTiffImage::~BigTiffImage()>:     push   rbp)
+RBP: 0x7fffffffe220 --> 0x7fffffffe260 --> 0x7fffffffe2c0 --> 0x7fffffffe310 --> 0x7fffffffe3b0 --> 0x0
+RSP: 0x7fffffffe070 --> 0x644a90 --> 0x7ffff7b873d0 --> 0x7ffff7731a14 (<Exiv2::(anonymous namespace)::BigTiffImage::~BigTiffImage()>:  push   rbp)
+RIP: 0x7ffff7731fc4 (<Exiv2::(anonymous namespace)::BigTiffImage::printIFD(std::ostream&, Exiv2::PrintStructureOption, uint64_t, int)+1222>:    div    QWORD PTR [rbp-0xe8])
+R8 : 0x1000
+R9 : 0x644ba0 --> 0x0
+R10: 0x7fffffffde30 --> 0x0
+R11: 0x7ffff773347a (<std::numeric_limits<unsigned long>::max()>:       push   rbp)
+R12: 0x41c6f8 (<Action::Print::run(std::string const&)>:        push   rbp)
+R13: 0x7fffffffe490 --> 0x3
+R14: 0x0
+R15: 0x0
+EFLAGS: 0x10202 (carry parity adjust zero sign trap INTERRUPT direction overflow)
+[-------------------------------------code-------------------------------------]
+   0x7ffff7731fb4 <Exiv2::(anonymous namespace)::BigTiffImage::printIFD(std::ostream&, Exiv2::PrintStructureOption, uint64_t, int)+1206>:       mov    ebx,DWORD PTR [rbp-0x170]
+   0x7ffff7731fba <Exiv2::(anonymous namespace)::BigTiffImage::printIFD(std::ostream&, Exiv2::PrintStructureOption, uint64_t, int)+1212>:       call   0x7ffff7714560 <_ZNSt14numeric_limitsImE3maxEv@plt>
+   0x7ffff7731fbf <Exiv2::(anonymous namespace)::BigTiffImage::printIFD(std::ostream&, Exiv2::PrintStructureOption, uint64_t, int)+1217>:       mov    edx,0x0
+=> 0x7ffff7731fc4 <Exiv2::(anonymous namespace)::BigTiffImage::printIFD(std::ostream&, Exiv2::PrintStructureOption, uint64_t, int)+1222>:       div    QWORD PTR [rbp-0xe8]
+   0x7ffff7731fcb <Exiv2::(anonymous namespace)::BigTiffImage::printIFD(std::ostream&, Exiv2::PrintStructureOption, uint64_t, int)+1229>:       cmp    rbx,rax
+   0x7ffff7731fce <Exiv2::(anonymous namespace)::BigTiffImage::printIFD(std::ostream&, Exiv2::PrintStructureOption, uint64_t, int)+1232>:       seta   al
+   0x7ffff7731fd1 <Exiv2::(anonymous namespace)::BigTiffImage::printIFD(std::ostream&, Exiv2::PrintStructureOption, uint64_t, int)+1235>:       test   al,al
+   0x7ffff7731fd3 <Exiv2::(anonymous namespace)::BigTiffImage::printIFD(std::ostream&, Exiv2::PrintStructureOption, uint64_t, int)+1237>:       je     0x7ffff7732008 <Exiv2::(anonymous namespace)::BigTiffImage::printIFD(std::ostream&, Exiv2::PrintStructureOption, uint64_t, int)+1290>
+[------------------------------------stack-------------------------------------]
+0000| 0x7fffffffe070 --> 0x644a90 --> 0x7ffff7b873d0 --> 0x7ffff7731a14 (<Exiv2::(anonymous namespace)::BigTiffImage::~BigTiffImage()>: push   rbp)
+0008| 0x7fffffffe078 --> 0x7ffff7b972b8 --> 0x42cd52 (<std::auto_ptr<Exiv2::Image>::~auto_ptr()>:       push   rbp)
+0016| 0x7fffffffe080 --> 0x8
+0024| 0x7fffffffe088 --> 0x200000000
+0032| 0x7fffffffe090 --> 0x640900 --> 0x7ffff7590f18 --> 0x7ffff733ad20 (<_ZNSoD1Ev>:   mov    rax,QWORD PTR [rip+0x258c71]        # 0x7ffff7593998)
+0040| 0x7fffffffe098 --> 0x644a90 --> 0x7ffff7b873d0 --> 0x7ffff7731a14 (<Exiv2::(anonymous namespace)::BigTiffImage::~BigTiffImage()>: push   rbp)
+0048| 0x7fffffffe0a0 --> 0x100ffffe0d0
+0056| 0x7fffffffe0a8 --> 0x8
+[------------------------------------------------------------------------------]
+Legend: code, data, rodata, value
+Stopped reason: SIGFPE
+0x00007ffff7731fc4 in Exiv2::(anonymous namespace)::BigTiffImage::printIFD (this=0x644a90, out=..., option=Exiv2::kpsXMP, dir_offset=0x8, depth=0x0) at bigtiffimage.cpp:254
+254                                 if (size > std::numeric_limits<uint64_t>::max() / count)
+gdb-peda$ p count
+$1 = 0x0
+
+gdb-peda$ bt
+#0  0x00007ffff7731fc4 in Exiv2::(anonymous namespace)::BigTiffImage::printIFD (this=0x644a90, out=..., option=Exiv2::kpsXMP, dir_offset=0x8, depth=0x0) at bigtiffimage.cpp:254
+#1  0x00007ffff7731af6 in Exiv2::(anonymous namespace)::BigTiffImage::printStructure (this=0x644a90, os=..., option=Exiv2::kpsXMP, depth=0x0) at bigtiffimage.cpp:183
+#2  0x000000000041ca2e in Action::Print::printStructure (this=0x644810, out=..., option=Exiv2::kpsXMP) at actions.cpp:283
+#3  0x000000000041c7f9 in Action::Print::run (this=0x644810, path="crashes-2018-03-23-22-41/exiv2000:id:000001,sig:08,src:000109,op:arith8,pos:23,val:-27") at actions.cpp:257
+#4  0x000000000040e267 in main (argc=0x3, argv=0x7fffffffe498) at exiv2.cpp:166
+#5  0x00007ffff6ce9f45 in __libc_start_main (main=0x40dfae <main(int, char* const*)>, argc=0x3, argv=0x7fffffffe498, init=<optimized out>, fini=<optimized out>, rtld_fini=<optimized out>, stack_end=0x7fffffffe488) at libc-start.c:287
+#6  0x000000000040dee9 in _start ()
+
+
+```
+
+## 8-readData-assert-1
+
+```
+$ exiv2 -pX $POC
+
+[----------------------------------registers-----------------------------------]
+RAX: 0x0
+RBX: 0x7ffff7ff3000 --> 0x7669786500001000
+RCX: 0xffffffffffffffff
+RDX: 0x6
+RSI: 0xbf4
+RDI: 0xbf4
+RBP: 0x7ffff6e4c018 ("%s%s%s:%u: %s%sAssertion `%s' failed.\n%n")
+RSP: 0x7fffffffde38 --> 0x7ffff6d02028 (<__GI_abort+328>:       mov    rdx,QWORD PTR fs:0x10)
+RIP: 0x7ffff6cfec37 (<__GI_raise+55>:   cmp    rax,0xfffffffffffff000)
+R8 : 0xfefefefefefefeff
+R9 : 0xffffffffffff0000
+R10: 0x8
+R11: 0x202
+R12: 0x7ffff7890714 ("data.size_ != 0")
+R13: 0x7ffff7890820 ("uint64_t Exiv2::{anonymous}::BigTiffImage::readData(int) const")
+R14: 0x0
+R15: 0x0
+EFLAGS: 0x202 (carry parity adjust zero sign trap INTERRUPT direction overflow)
+[-------------------------------------code-------------------------------------]
+   0x7ffff6cfec2d <__GI_raise+45>:      movsxd rdi,ecx
+   0x7ffff6cfec30 <__GI_raise+48>:      mov    eax,0xea
+   0x7ffff6cfec35 <__GI_raise+53>:      syscall
+=> 0x7ffff6cfec37 <__GI_raise+55>:      cmp    rax,0xfffffffffffff000
+   0x7ffff6cfec3d <__GI_raise+61>:      ja     0x7ffff6cfec5d <__GI_raise+93>
+   0x7ffff6cfec3f <__GI_raise+63>:      repz ret
+   0x7ffff6cfec41 <__GI_raise+65>:      nop    DWORD PTR [rax+0x0]
+   0x7ffff6cfec48 <__GI_raise+72>:      test   ecx,ecx
+[------------------------------------stack-------------------------------------]
+0000| 0x7fffffffde38 --> 0x7ffff6d02028 (<__GI_abort+328>:      mov    rdx,QWORD PTR fs:0x10)
+0008| 0x7fffffffde40 --> 0x20 (' ')
+0016| 0x7fffffffde48 --> 0x0
+0024| 0x7fffffffde50 --> 0x0
+0032| 0x7fffffffde58 --> 0x0
+0040| 0x7fffffffde60 --> 0x0
+0048| 0x7fffffffde68 --> 0x0
+0056| 0x7fffffffde70 --> 0x0
+[------------------------------------------------------------------------------]
+Legend: code, data, rodata, value
+Stopped reason: SIGABRT
+0x00007ffff6cfec37 in __GI_raise (sig=sig@entry=0x6) at ../nptl/sysdeps/unix/sysv/linux/raise.c:56
+56      ../nptl/sysdeps/unix/sysv/linux/raise.c: No such file or directory.
+gdb-peda$ bt
+#0  0x00007ffff6cfec37 in __GI_raise (sig=sig@entry=0x6) at ../nptl/sysdeps/unix/sysv/linux/raise.c:56
+#1  0x00007ffff6d02028 in __GI_abort () at abort.c:89
+#2  0x00007ffff6cf7bf6 in __assert_fail_base (fmt=0x7ffff6e4c018 "%s%s%s:%u: %s%sAssertion `%s' failed.\n%n", assertion=assertion@entry=0x7ffff7890714 "data.size_ != 0", file=file@entry=0x7ffff7890600 "bigtiffimage.cpp", line=line@entry=0x199, function=function@entry=0x7ffff7890820 <Exiv2::(anonymous namespace)::BigTiffImage::readData(int) const::__PRETTY_FUNCTION__> "uint64_t Exiv2::{anonymous}::BigTiffImage::readData(int) const") at assert.c:92
+#3  0x00007ffff6cf7ca2 in __GI___assert_fail (assertion=0x7ffff7890714 "data.size_ != 0", file=0x7ffff7890600 "bigtiffimage.cpp", line=0x199, function=0x7ffff7890820 <Exiv2::(anonymous namespace)::BigTiffImage::readData(int) const::__PRETTY_FUNCTION__> "uint64_t Exiv2::{anonymous}::BigTiffImage::readData(int) const") at assert.c:101
+#4  0x00007ffff77330ea in Exiv2::(anonymous namespace)::BigTiffImage::readData (this=0x644a80, size=0x2) at bigtiffimage.cpp:409
+#5  0x00007ffff7731de4 in Exiv2::(anonymous namespace)::BigTiffImage::printIFD (this=0x644a80, out=..., option=Exiv2::kpsXMP, dir_offset=0x8, depth=0x0) at bigtiffimage.cpp:230
+#6  0x00007ffff7731af6 in Exiv2::(anonymous namespace)::BigTiffImage::printStructure (this=0x644a80, os=..., option=Exiv2::kpsXMP, depth=0x0) at bigtiffimage.cpp:183
+#7  0x000000000041ca2e in Action::Print::printStructure (this=0x644800, out=..., option=Exiv2::kpsXMP) at actions.cpp:283
+#8  0x000000000041c7f9 in Action::Print::run (this=0x644800, path="crashes-2018-03-23-22-41/exiv2000:id:000000,sig:06,src:000060,op:flip1,pos:8") at actions.cpp:257
+#9  0x000000000040e267 in main (argc=0x3, argv=0x7fffffffe4a8) at exiv2.cpp:166
+#10 0x00007ffff6ce9f45 in __libc_start_main (main=0x40dfae <main(int, char* const*)>, argc=0x3, argv=0x7fffffffe4a8, init=<optimized out>, fini=<optimized out>, rtld_fini=<optimized out>, stack_end=0x7fffffffe498) at libc-start.c:287
+#11 0x000000000040dee9 in _start ()
+
+
+```
+
+## 9-printStructure-outbound-read-1
+
+```
+
+$ exiv2 -pv $POC
+
+Program received signal SIGSEGV, Segmentation fault.
+[----------------------------------registers-----------------------------------]
+RAX: 0x662000 ('')
+RBX: 0x3
+RCX: 0x2
+RDX: 0x14ff0
+RSI: 0x64d010 --> 0x7ffff7082a49 (MemError)
+RDI: 0x7fffffffe050 --> 0x7ffff7592e38 --> 0x7ffff735afb0 (<_ZNSt14basic_ofstreamIcSt11char_traitsIcEED1Ev>:    mov    rax,QWORD PTR [rip+0x238d01]        # 0x7ffff7593cb8)
+RBP: 0x7fffffffd960 --> 0x7fffffffdb40 --> 0x7fffffffdd20 --> 0x7fffffffdf00 --> 0x7fffffffdf80 --> 0x7fffffffdfe0 (--> ...)
+RSP: 0x7fffffffd8a0 --> 0x2f7fe2780
+RIP: 0x7ffff778bf41 (<Exiv2::IptcData::printStructure(std::ostream&, unsigned char const*, unsigned long, unsigned int)+111>:   movzx  eax,BYTE PTR [rax])
+R8 : 0x644950 --> 0x0
+R9 : 0x64d010 --> 0x7ffff7082a49 (MemError)
+R10: 0x5e ('^')
+R11: 0x246
+R12: 0x7ffff78a2ac5 --> 0x4853004949435341 ('ASCII')
+R13: 0x7fffffffe490 --> 0x3
+R14: 0x0
+R15: 0x0
+EFLAGS: 0x10206 (carry PARITY adjust zero sign trap INTERRUPT direction overflow)
+[-------------------------------------code-------------------------------------]
+   0x7ffff778bf31 <Exiv2::IptcData::printStructure(std::ostream&, unsigned char const*, unsigned long, unsigned int)+95>:       mov    edx,DWORD PTR [rbp-0x94]
+   0x7ffff778bf37 <Exiv2::IptcData::printStructure(std::ostream&, unsigned char const*, unsigned long, unsigned int)+101>:      mov    rax,QWORD PTR [rbp-0xb0]
+   0x7ffff778bf3e <Exiv2::IptcData::printStructure(std::ostream&, unsigned char const*, unsigned long, unsigned int)+108>:      add    rax,rdx
+=> 0x7ffff778bf41 <Exiv2::IptcData::printStructure(std::ostream&, unsigned char const*, unsigned long, unsigned int)+111>:      movzx  eax,BYTE PTR [rax]
+   0x7ffff778bf44 <Exiv2::IptcData::printStructure(std::ostream&, unsigned char const*, unsigned long, unsigned int)+114>:      cmp    al,0x1c
+   0x7ffff778bf46 <Exiv2::IptcData::printStructure(std::ostream&, unsigned char const*, unsigned long, unsigned int)+116>:      jne    0x7ffff778bf14 <Exiv2::IptcData::printStructure(std::ostream&, unsigned char const*, unsigned long, unsigned int)+66>
+   0x7ffff778bf48 <Exiv2::IptcData::printStructure(std::ostream&, unsigned char const*, unsigned long, unsigned int)+118>:      add    DWORD PTR [rbp-0xbc],0x1
+   0x7ffff778bf4f <Exiv2::IptcData::printStructure(std::ostream&, unsigned char const*, unsigned long, unsigned int)+125>:      mov    edx,DWORD PTR [rbp-0xbc]
+[------------------------------------stack-------------------------------------]
+0000| 0x7fffffffd8a0 --> 0x2f7fe2780
+0008| 0x7fffffffd8a8 --> 0x2
+0016| 0x7fffffffd8b0 --> 0x64d010 --> 0x7ffff7082a49 (MemError)
+0024| 0x7fffffffd8b8 --> 0x7fffffffe050 --> 0x7ffff7592e38 --> 0x7ffff735afb0 (<_ZNSt14basic_ofstreamIcSt11char_traitsIcEED1Ev>:        mov    rax,QWORD PTR [rip+0x238d01]        # 0x7ffff7593cb8)
+0032| 0x7fffffffd8c0 --> 0x0
+0040| 0x7fffffffd8c8 --> 0x14ff0f6d39947
+0048| 0x7fffffffd8d0 --> 0xd47b0c2
+0056| 0x7fffffffd8d8 --> 0x644870 --> 0x7ffffbad2488
+[------------------------------------------------------------------------------]
+Legend: code, data, rodata, value
+Stopped reason: SIGSEGV
+0x00007ffff778bf41 in Exiv2::IptcData::printStructure (out=..., bytes=0x64d010 "I*\b\367\377\177", size=0x2, depth=0x2) at iptc.cpp:354
+354                     while  ( i < size-3 && bytes[i] != 0x1c ) i++;
+gdb-peda$ p bytes
+$1 = (const Exiv2::byte *) 0x64d010 "I*\b\367\377\177"
+gdb-peda$ x /4w $rax
+0x662000:       Cannot access memory at address 0x662000
+gdb-peda$ bt
+#0  0x00007ffff778bf41 in Exiv2::IptcData::printStructure (out=..., bytes=0x64d010 "I*\b\367\377\177", size=0x2, depth=0x2) at iptc.cpp:354
+#1  0x00007ffff7782379 in Exiv2::Image::printIFDStructure (this=0x644ab0, io=..., out=..., option=Exiv2::kpsRecursive, start=0x8, bSwap=0x0, c=0x49, depth=0x2) at image.cpp:470
+#2  0x00007ffff778218c in Exiv2::Image::printIFDStructure (this=0x644ab0, io=..., out=..., option=Exiv2::kpsRecursive, start=0x8, bSwap=0x0, c=0x49, depth=0x1) at image.cpp:455
+#3  0x00007ffff778218c in Exiv2::Image::printIFDStructure (this=0x644ab0, io=..., out=..., option=Exiv2::kpsRecursive, start=0x8, bSwap=0x0, c=0x49, depth=0x0) at image.cpp:455
+#4  0x00007ffff7782abc in Exiv2::Image::printTiffStructure (this=0x644ab0, io=..., out=..., option=Exiv2::kpsRecursive, depth=0xffffffff, offset=0x0) at image.cpp:533
+#5  0x00007ffff781bc6d in Exiv2::TiffImage::printStructure (this=0x644ab0, out=..., option=Exiv2::kpsRecursive, depth=0x0) at tiffimage.cpp:344
+#6  0x00007ffff781aec3 in Exiv2::TiffImage::readMetadata (this=0x644ab0) at tiffimage.cpp:187
+#7  0x000000000041fba6 in Action::Print::printList (this=0x644830) at actions.cpp:537
+#8  0x000000000041c76b in Action::Print::run (this=0x644830, path="./crashes-2018-03-23-21-09/exiv2000:id:000015,sig:11,src:000399,op:flip1,pos:26") at actions.cpp:243
+#9  0x000000000040e267 in main (argc=0x3, argv=0x7fffffffe498) at exiv2.cpp:166
+#10 0x00007ffff6ce9f45 in __libc_start_main (main=0x40dfae <main(int, char* const*)>, argc=0x3, argv=0x7fffffffe498, init=<optimized out>, fini=<optimized out>, rtld_fini=<optimized out>, stack_end=0x7fffffffe488) at libc-start.c:287
+#11 0x000000000040dee9 in _start ()
+
+
+```
+
+## 10-printStructure-outbound-read-2
+
+```
+$ exiv2 -pv $POC
+
+Program received signal SIGSEGV, Segmentation fault.
+[----------------------------------registers-----------------------------------]
+RAX: 0x66208e
+RBX: 0x7ffff78a2ed9 --> 0x63747049002e2e2e ('...')
+RCX: 0x0
+RDX: 0xf1fe
+RSI: 0xffffffff
+RDI: 0x0
+RBP: 0x7fffffff2ce0 --> 0x7fffffff2ec0 --> 0x7fffffff30a0 --> 0x7fffffff3280 --> 0x7fffffff3460 --> 0x7fffffff3640 (--> ...)
+RSP: 0x7fffffff2c20 --> 0x5ff7fe2780
+RIP: 0x7ffff778c165 (<Exiv2::IptcData::printStructure(std::ostream&, unsigned char const*, unsigned long, unsigned int)+659>:   movzx  eax,BYTE PTR [rax])
+R8 : 0x0
+R9 : 0x651fe0 --> 0x0
+R10: 0x7ffff7089760 --> 0x0
+R11: 0x0
+R12: 0x7ffff78a2ac5 --> 0x4853004949435341 ('ASCII')
+R13: 0x7fffffffe490 --> 0x3
+R14: 0x0
+R15: 0x0
+EFLAGS: 0x10206 (carry PARITY adjust zero sign trap INTERRUPT direction overflow)                                                                                                                                [-------------------------------------code-------------------------------------]
+   0x7ffff778c155 <Exiv2::IptcData::printStructure(std::ostream&, unsigned char const*, unsigned long, unsigned int)+643>:      mov    edx,DWORD PTR [rbp-0x94]
+   0x7ffff778c15b <Exiv2::IptcData::printStructure(std::ostream&, unsigned char const*, unsigned long, unsigned int)+649>:      mov    rax,QWORD PTR [rbp-0xb0]
+   0x7ffff778c162 <Exiv2::IptcData::printStructure(std::ostream&, unsigned char const*, unsigned long, unsigned int)+656>:      add    rax,rdx
+=> 0x7ffff778c165 <Exiv2::IptcData::printStructure(std::ostream&, unsigned char const*, unsigned long, unsigned int)+659>:      movzx  eax,BYTE PTR [rax]
+   0x7ffff778c168 <Exiv2::IptcData::printStructure(std::ostream&, unsigned char const*, unsigned long, unsigned int)+662>:      cmp    al,0x1c
+   0x7ffff778c16a <Exiv2::IptcData::printStructure(std::ostream&, unsigned char const*, unsigned long, unsigned int)+664>:      jne    0x7ffff778c186 <Exiv2::IptcData::printStructure(std::ostream&, unsigned ch
+ar const*, unsigned long, unsigned int)+692>
+   0x7ffff778c16c <Exiv2::IptcData::printStructure(std::ostream&, unsigned char const*, unsigned long, unsigned int)+666>:      mov    eax,DWORD PTR [rbp-0x94]
+   0x7ffff778c172 <Exiv2::IptcData::printStructure(std::ostream&, unsigned char const*, unsigned long, unsigned int)+672>:      mov    rdx,QWORD PTR [rbp-0xb8]
+[------------------------------------stack-------------------------------------]
+0000| 0x7fffffff2c20 --> 0x5ff7fe2780
+0008| 0x7fffffff2c28 --> 0xf4
+0016| 0x7fffffff2c30 --> 0x652e90 --> 0x1300000008002a49
+0024| 0x7fffffff2c38 --> 0x7fffffffe050 --> 0x7ffff7592e38 --> 0x7ffff735afb0 (<_ZNSt14basic_ofstreamIcSt11char_traitsIcEED1Ev>:        mov    rax,QWORD PTR [rip+0x238d01]        # 0x7ffff7593cb8)
+0032| 0x7fffffff2c40 --> 0x2000000000000
+0040| 0x7fffffff2c48 --> 0xf1fef10e0003
+0048| 0x7fffffff2c50 --> 0x651ff8 ('.' <repeats 39 times>)
+0056| 0x7fffffff2c58 --> 0x644880 --> 0x7ffffbad2488
+[------------------------------------------------------------------------------]
+Legend: code, data, rodata, value
+Stopped reason: SIGSEGV
+0x00007ffff778c165 in Exiv2::IptcData::printStructure (out=..., bytes=0x652e90 "I*", size=0xf4, depth=0x5f) at iptc.cpp:357
+357                     while ( bytes[i] == 0x1c && i < size-3 ) {
+gdb-peda$ bt
+#0  0x00007ffff778c165 in Exiv2::IptcData::printStructure (out=..., bytes=0x652e90 "I*", size=0xf4, depth=0x5f) at iptc.cpp:357
+#1  0x00007ffff7782379 in Exiv2::Image::printIFDStructure (this=0x644ac0, io=..., out=..., option=Exiv2::kpsRecursive, start=0x8, bSwap=0x0, c=0x49, depth=0x5e) at image.cpp:470
+#2  0x00007ffff778218c in Exiv2::Image::printIFDStructure (this=0x644ac0, io=..., out=..., option=Exiv2::kpsRecursive, start=0x8, bSwap=0x0, c=0x49, depth=0x5d) at image.cpp:455
+#3  0x00007ffff778218c in Exiv2::Image::printIFDStructure (this=0x644ac0, io=..., out=..., option=Exiv2::kpsRecursive, start=0x8, bSwap=0x0, c=0x49, depth=0x5c) at image.cpp:455
+#4  0x00007ffff778218c in Exiv2::Image::printIFDStructure (this=0x644ac0, io=..., out=..., option=Exiv2::kpsRecursive, start=0x8, bSwap=0x0, c=0x49, depth=0x5b) at image.cpp:455
+#5  0x00007ffff778218c in Exiv2::Image::printIFDStructure (this=0x644ac0, io=..., out=..., option=Exiv2::kpsRecursive, start=0x8, bSwap=0x0, c=0x49, depth=0x5a) at image.cpp:455
+#6  0x00007ffff778218c in Exiv2::Image::printIFDStructure (this=0x644ac0, io=..., out=..., option=Exiv2::kpsRecursive, start=0x8, bSwap=0x0, c=0x49, depth=0x59) at image.cpp:455
+#7  0x00007ffff778218c in Exiv2::Image::printIFDStructure (this=0x644ac0, io=..., out=..., option=Exiv2::kpsRecursive, start=0x8, bSwap=0x0, c=0x49, depth=0x58) at image.cpp:455
+#8  0x00007ffff778218c in Exiv2::Image::printIFDStructure (this=0x644ac0, io=..., out=..., option=Exiv2::kpsRecursive, start=0x8, bSwap=0x0, c=0x49, depth=0x57) at image.cpp:455
+#9  0x00007ffff778218c in Exiv2::Image::printIFDStructure (this=0x644ac0, io=..., out=..., option=Exiv2::kpsRecursive, start=0x8, bSwap=0x0, c=0x49, depth=0x56) at image.cpp:455
+#10 0x00007ffff778218c in Exiv2::Image::printIFDStructure (this=0x644ac0, io=..., out=..., option=Exiv2::kpsRecursive, start=0x8, bSwap=0x0, c=0x49, depth=0x55) at image.cpp:455
+#11 0x00007ffff778218c in Exiv2::Image::printIFDStructure (this=0x644ac0, io=..., out=..., option=Exiv2::kpsRecursive, start=0x8, bSwap=0x0, c=0x49, depth=0x54) at image.cpp:455
+#12 0x00007ffff778218c in Exiv2::Image::printIFDStructure (this=0x644ac0, io=..., out=..., option=Exiv2::kpsRecursive, start=0x8, bSwap=0x0, c=0x49, depth=0x53) at image.cpp:455
+
+...
+
+```
