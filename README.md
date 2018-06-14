@@ -81,3 +81,11 @@ this work done with 360 TeamSeri0us
 ### CVE-2018-12264
 ### CVE-2018-12265.
 
+## cms
+### CVE-2018-11555
+### CVE-2018-11556
+
+
+
+
+
