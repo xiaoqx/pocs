@@ -61,7 +61,7 @@ this work done with 360 TeamSeri0us
 ## netpbm
 ### CVE-2018-8975.
 
-## exiv2
+## exiv2 
 ### CVE-2018-8976.
 ### CVE-2018-8977
 
@@ -85,7 +85,8 @@ this work done with 360 TeamSeri0us
 ### CVE-2018-11555
 ### CVE-2018-11556
 
-
+## sam2p
+### CVE-2018-12578 (pwd)
 
 
 
