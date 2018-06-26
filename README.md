@@ -87,6 +87,11 @@ this work done with 360 TeamSeri0us
 
 ## sam2p
 ### CVE-2018-12578 (pwd)
+### CVE-2018-12601 (pwd)
+
+## exempi
+
+### CVE-2018-12648
 
 
 
