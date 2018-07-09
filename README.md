@@ -92,6 +92,10 @@ this work done with 360 TeamSeri0us
 ## exempi
 
 ### CVE-2018-12648
+### CVE-2018-13414
+
+## mupdf
+### CVE-2018-13413
 
 
 
